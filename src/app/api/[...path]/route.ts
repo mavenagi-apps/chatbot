@@ -32,7 +32,7 @@ const handleRequest = async (
     }),
   );
   const responseHeaders = new Headers();
-  for (const key of ["content-type"]) {
+  for (const key of ["content-type", "content-encoding"]) {
     if (response.headers.get(key)) {
       responseHeaders.set(key, response.headers.get(key)!);
     }

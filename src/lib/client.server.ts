@@ -1,6 +1,6 @@
 export function getBaseUrl() {
   return `https://www.${
-    process.env.ENVIRONMENT === "production"
+    !process.env.ENVIRONMENT || process.env.ENVIRONMENT === "production"
       ? ""
       : process.env.ENVIRONMENT === "sandbox"
         ? `${process.env.SANDBOX_USER}.sb.`
