@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
+    "dev": "turbo run dev dev:root",
+    "dev:root": "next dev",
+    "build": "turbo run build build:root",
+    "build:root": "next build",
+    "lint": "turbo run lint",
+    "lint:root": "next lint",
     "format": "prettier --log-level warn --write \"**/*.{js,cjs,mjs,json,ts,mts,cts,tsx,md,mdx,yml,yaml}\""
   },
   "dependencies": {
@@ -59,6 +61,7 @@
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.8",
     "tailwindcss": "^3.4.1",
+    "turbo": "^2.3.0",
     "typescript": "^5"
   },
   "packageManager": "pnpm@9.10.0+sha512.73a29afa36a0d092ece5271de5177ecbf8318d454ecd701343131b8ebc0c1a91c487da46ab77c8e596d6acf1461e3594ced4becedf8921b074fbd8653ed7051c"

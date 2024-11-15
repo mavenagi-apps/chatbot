@@ -1,0 +1,25 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalPassThroughEnv": ["MAVENAGI_APP_ID", "MAVENAGI_APP_SECRET"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"]
+    },
+    "//#build:root": {
+      "dependsOn": ["@repo/widget#build"],
+      "inputs": ["$TURBO_DEFAULT$", "widget/**"],
+      "outputs": [".next/**", "!.next/cache/**"]
+    },
+    "check-types": {
+      "dependsOn": ["^check-types"]
+    },
+    "dev": {
+      "persistent": true,
+      "cache": false
+    },
+    "//#dev:root": {
+      "persistent": false,
+      "cache": false
+    }
+  }
+}

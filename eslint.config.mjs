@@ -15,7 +15,7 @@ const compat = new FlatCompat({
 const config = [
   includeIgnoreFile(gitignorePath),
   {
-    ignores: ["src/app/mavenagi-cgi/"],
+    ignores: ["src/app/mavenagi-cgi/", "widget/"],
   },
   ...compat.extends("next/core-web-vitals", "next/typescript", "prettier"),
   {
