@@ -13,8 +13,6 @@ It is being replaced by Chat v2 which has additional features and security.
 
 # Deploying the App Via JS Widget
 
-Note: As of 11/14 the widget.js change is not in prod. So this app can be previewed (see below section) but the embed won't work until approx 11/19
-
 1. Include the below javascript to install the chat widget on your website.
 
 ```
