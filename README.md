@@ -58,6 +58,6 @@ You can set the location of the chat button on your website using the following 
 
 ## Previewing the widget in fullscreen
 
-Once installed, the app is available at `https://chat.onmaven.app/en/<organizationId>/<agentId>`.
+Once installed, the app is available at `https://chat.onmaven.app/en/<organizationId>/<agentId>/preview`.
 
 This is the URL that gets iframed when the app is rendered as an embedded widget.
