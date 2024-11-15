@@ -27,7 +27,7 @@ export default function RootLayout({
     <html>
       <body className={cn(font.className, "antialiased")}>
         <Providers>{children}</Providers>
-        <Toaster richColors />
+        <Toaster richColors position="top-center" />
         <Analytics />
         <SpeedInsights />
       </body>

@@ -48,7 +48,7 @@ export function Providers({ children }: React.PropsWithChildren<object>) {
   return (
     <QueryClientProvider client={queryClient}>
       <AmplitudeProvider>{children}</AmplitudeProvider>
-      <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-left" />
+      <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-right" />
     </QueryClientProvider>
   );
 }

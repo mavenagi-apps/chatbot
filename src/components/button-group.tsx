@@ -14,15 +14,12 @@ export const ButtonGroup = React.forwardRef<
     >
       {React.Children.toArray(children)
         .filter((child) => React.isValidElement(child))
-        .map((child, index, list) => {
+        .map((child) => {
           return React.cloneElement(
             child as React.ReactElement<HTMLAttributes<HTMLButtonElement>>,
             {
               className: cn(
-                "border border-b border-t border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-200 focus:z-10 focus:ring-2 focus:ring-gray-200 data-[active]:bg-gray-200",
-                index === 0 && "rounded-s-lg",
-                index !== 0 && "border-l-0",
-                index === React.Children.count(list) - 1 && "rounded-e-lg",
+                "p-2 text-[#4f5a69] rounded-lg hover:bg-gray-200 focus:z-10 focus:ring-2 focus:ring-gray-200 data-[active]:bg-gray-200",
               ),
             },
           );

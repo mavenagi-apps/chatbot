@@ -87,7 +87,8 @@ export async function POST(req: Request) {
     return new Response(
       `0:${JSON.stringify(text)}\n8:${JSON.stringify([
         {
-          conversationMessageId: responseMessage.conversationMessageId,
+          conversationMessageId:
+            responseMessage.conversationMessageId.referenceId,
           followupQuestions: responseMessage.metadata.followupQuestions,
           sources: responseMessage.metadata.sources,
           actions,

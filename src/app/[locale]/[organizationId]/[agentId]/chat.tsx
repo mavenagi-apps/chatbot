@@ -8,7 +8,7 @@ import { ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useParams, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { BotMessage } from "@/components/bot-message";
@@ -27,7 +27,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { UserMessage } from "@/components/user-message";
 import { useAmplitude } from "@/lib/amplitude-provider";
 import { useMavenAGIClient } from "@/lib/client";
@@ -80,7 +79,7 @@ export function Chat() {
   const {
     messages,
     input,
-    handleInputChange,
+    setInput,
     handleSubmit: _handleSubmit,
     isLoading,
     append: _append,
@@ -119,9 +118,35 @@ export function Chat() {
     messages.length > 0 && messages[messages.length - 1].role === "assistant";
 
   const latestQuestionRef = useRef<HTMLDivElement>(null);
+  if (!appSettings.brandColor) {
+    appSettings.brandColor = "#6C2BD9";
+  }
+  if (!appSettings.brandFontColor) {
+    appSettings.brandFontColor = "#6C2BD9";
+  }
+  if (!appSettings.brandTitleColor) {
+    appSettings.brandTitleColor = "#ffffff";
+  }
+
   const brandColor = appSettings.brandColor
     ? new Color(appSettings.brandColor)
     : undefined;
+
+  const followUpQuestions =
+    messages.length > 0 &&
+    messages[messages.length - 1].role === "assistant" &&
+    messages[messages.length - 1].annotations &&
+    (messages[messages.length - 1].annotations as MessageAnnotation[]).length >
+      0 &&
+    (messages[messages.length - 1].annotations as MessageAnnotation[])[
+      (messages[messages.length - 1].annotations as MessageAnnotation[])
+        .length - 1
+    ]
+      ? (messages[messages.length - 1].annotations as MessageAnnotation[])[
+          (messages[messages.length - 1].annotations as MessageAnnotation[])
+            .length - 1
+        ].followupQuestions
+      : [];
 
   return (
     <main
@@ -138,15 +163,22 @@ export function Chat() {
       }}
     >
       <div className="border-b border-gray-300 bg-white">
-        <div className="text-md p-5 font-medium text-gray-950">
+        <div className="text-md py-4 px-6 font-medium text-gray-950">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img alt="Logo" src={appSettings.logoUrl} className="h-7" />
         </div>
       </div>
-      <div className="flex flex-1 flex-col overflow-auto text-xs">
-        <div className="mx-auto w-full max-w-3xl flex-1 text-gray-800 mt-5 px-5">
-          <ChatBubble direction="full">
-            <div className="flex flex-col">
+      <div
+        className="flex flex-1 flex-col overflow-y-auto p-2"
+        style={{ scrollbarGutter: "stable both-edges", scrollbarWidth: "thin" }}
+      >
+        <div className="mx-auto w-full max-w-3xl flex-1 text-gray-800 mt-5 px-2 *:mt-4">
+          <ChatBubble
+            direction="full"
+            className="bg-[#f2f4f5] p-5"
+            style={{ marginTop: 0 }}
+          >
+            <div className="flex flex-col gap-3">
               <div className="mb-2 whitespace-pre-wrap">
                 <ReactMarkdown linkTargetInNewTab>
                   {appSettings.welcomeMessage || t("default_welcome_message")}
@@ -155,13 +187,20 @@ export function Chat() {
               {appSettings.popularQuestions
                 .slice(0, 3)
                 .map((question, index) => (
-                  <div
-                    className="my-1 cursor-pointer underline"
+                  <button
                     key={index}
-                    onClick={() => append({ role: "user", content: question })}
+                    type="button"
+                    className="flex flex-row px-3 py-1 gap-2 items-center rounded-lg border border-[#DADEE3] bg-white/50 text-left text-xs text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200"
+                    onClick={() => {
+                      void append({
+                        role: "user",
+                        content: question,
+                      });
+                    }}
                   >
+                    <ArrowRight className="size-4" />
                     {question}
-                  </div>
+                  </button>
                 ))}
             </div>
           </ChatBubble>
@@ -178,11 +217,66 @@ export function Chat() {
                 <UserMessage text={value.content} />
               </ChatBubble>
             ) : (
-              <ChatBubble direction="left" key={index}>
-                <div className="max-w-full">
-                  <BotMessage message={value.content} />
-                </div>
+              <Fragment key={index}>
+                <ChatBubble direction="left" className="bg-[#f2f4f5] gap-0">
+                  <div className="max-w-full">
+                    <BotMessage message={value.content} />
+                  </div>
 
+                  {value.annotations &&
+                    value.annotations.length > 0 &&
+                    (
+                      value.annotations[
+                        value.annotations.length - 1
+                      ] as MessageAnnotation
+                    ).sources.length > 0 && (
+                      <ul className="grid grid-cols-2 pb-5 px-5 gap-x-3 gap-y-2 text-xs">
+                        {(
+                          value.annotations[
+                            value.annotations.length - 1
+                          ] as MessageAnnotation
+                        ).sources
+                          .slice(0, 4)
+                          .map((source, index) => (
+                            <li
+                              key={index}
+                              className="inline-flex border rounded border-[#DADEE3] overflow-hidden"
+                            >
+                              <div className="px-2 py-1 bg-[#E8EAED]">
+                                {index + 1}
+                              </div>
+                              <div className="flex-1 bg-white truncate px-2 py-1">
+                                <a
+                                  key={index}
+                                  title={source.title || source.url}
+                                  href={source.url}
+                                  target="_blank"
+                                  className="text-zinc-950 decoration-zinc-950/50 data-[hover]:decoration-zinc-950 dark:text-white dark:decoration-white/50 dark:data-[hover]:decoration-white"
+                                >
+                                  {source.title || source.url}
+                                </a>
+                              </div>
+                            </li>
+                          ))}
+                      </ul>
+                    )}
+
+                  {value.annotations && value.annotations.length > 0 && (
+                    <div style={{ borderBottom: "none" }}>
+                      <FeedbackForm
+                        conversationId={conversationId}
+                        conversationMessageId={
+                          (
+                            value.annotations[
+                              value.annotations.length - 1
+                            ] as MessageAnnotation
+                          ).conversationMessageId
+                        }
+                        message={value.content}
+                      />
+                    </div>
+                  )}
+                </ChatBubble>
                 {value.annotations &&
                   value.annotations.length > 0 &&
                   (
@@ -201,120 +295,107 @@ export function Chat() {
                       });
 
                       return (
-                        <Form {...form}>
-                          <form
-                            onSubmit={(event) => {
-                              event.preventDefault();
-                              append({
-                                role: "user",
-                                content: action.fields
-                                  .map(
-                                    (field) =>
-                                      `${field.label}: ${form.getValues(field.id)}`,
-                                  )
-                                  .join("\n"),
-                                toolInvocations: [
-                                  {
-                                    state: "call",
-                                    toolCallId: action.id,
-                                    toolName: action.id,
-                                    args: form.getValues(),
-                                  },
-                                ],
-                              });
-                            }}
-                            className="space-y-8"
-                          >
-                            <h4 className="scroll-m-20 text-lg font-semibold tracking-tight">
-                              {action.formLabel}
-                            </h4>
-                            {action.fields.map((actionField) => (
-                              <FormField
-                                key={actionField.id}
-                                control={form.control}
-                                name={actionField.id}
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>{actionField.label}</FormLabel>
-                                    <FormControl>
-                                      <Input
-                                        {...field}
-                                        required={actionField.required}
-                                      />
-                                    </FormControl>
-                                    <FormDescription>
-                                      {actionField.description}
-                                    </FormDescription>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                            ))}
-                            <Button type="submit">{action.submitLabel}</Button>
-                          </form>
-                        </Form>
+                        <ChatBubble
+                          direction="left"
+                          key={index}
+                          className="bg-[#f2f4f5] gap-0"
+                          style={{ marginTop: "0.75rem" }}
+                        >
+                          <Form {...form}>
+                            <form
+                              onSubmit={(event) => {
+                                event.preventDefault();
+                                append({
+                                  role: "user",
+                                  content: action.fields
+                                    .map(
+                                      (field) =>
+                                        `${field.label}: ${form.getValues(field.id)}`,
+                                    )
+                                    .join("\n"),
+                                  toolInvocations: [
+                                    {
+                                      state: "call",
+                                      toolCallId: action.id,
+                                      toolName: action.id,
+                                      args: form.getValues(),
+                                    },
+                                  ],
+                                });
+                              }}
+                              className="space-y-4 p-5"
+                            >
+                              <h4 className="text-sm font-medium text-[#272C34]">
+                                {action.formLabel}
+                              </h4>
+                              {action.fields.map((actionField) => (
+                                <FormField
+                                  key={actionField.id}
+                                  control={form.control}
+                                  name={actionField.id}
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel className="text-sm font-medium text-[#414956]">
+                                        {actionField.label}
+                                      </FormLabel>
+                                      <FormControl>
+                                        <input
+                                          className="bg-white w-full border border-[#DADEE3] rounded-lg px-4 py-2"
+                                          {...field}
+                                          required={actionField.required}
+                                        />
+                                      </FormControl>
+                                      <FormDescription>
+                                        {actionField.description}
+                                      </FormDescription>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                              ))}
+                              <Button className="w-full" type="submit">
+                                {action.submitLabel}
+                              </Button>
+                            </form>
+                          </Form>
+                        </ChatBubble>
                       );
                     };
 
                     return <ActionForm key={action.id} />;
                   })}
-
-                {value.annotations &&
-                  value.annotations.length > 0 &&
-                  (
-                    value.annotations[
-                      value.annotations.length - 1
-                    ] as MessageAnnotation
-                  ).sources.length > 0 && (
-                    <div className="flex flex-col">
-                      <div className="text-gray-500">{t("related_links")}</div>
-                      <ul className="mt-2 space-y-2">
-                        {(
-                          value.annotations[
-                            value.annotations.length - 1
-                          ] as MessageAnnotation
-                        ).sources.map((source, index) => (
-                          <li
-                            key={index}
-                            className="flex items-center space-x-3"
-                          >
-                            <ArrowRight className="h-3.5 w-3.5" />
-                            <span className="flex-1">
-                              <a
-                                key={index}
-                                href={source.url}
-                                target="_blank"
-                                className="text-zinc-950 underline decoration-zinc-950/50 data-[hover]:decoration-zinc-950 dark:text-white dark:decoration-white/50 dark:data-[hover]:decoration-white"
-                              >
-                                {source.title || source.url}
-                              </a>
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                {value.annotations && value.annotations.length > 0 && (
-                  <FeedbackForm
-                    conversationId={conversationId}
-                    conversationMessageId={
-                      (
-                        value.annotations[
-                          value.annotations.length - 1
-                        ] as MessageAnnotation
-                      ).conversationMessageId
-                    }
-                    message={value.content}
-                  />
-                )}
-              </ChatBubble>
+              </Fragment>
             ),
           )}
           {isLoading && !isResponseAvailable && (
             <div className="my-5">
               <Spinner className="text-[--brand-color]" />
             </div>
+          )}
+
+          {!isLoading && followUpQuestions.length > 0 && (
+            <ChatBubble
+              direction="left"
+              className="flex flex-col bg-[#f2f4f5] items-start p-5 gap-3"
+            >
+              <div className="text-[#637083]">Select a suggested followup</div>
+              {followUpQuestions.map((question, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  className="flex flex-row px-3 py-1 gap-2 items-center rounded-lg border border-[#DADEE3] bg-white/50 text-left text-xs text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200"
+                  onClick={() => {
+                    void append({
+                      role: "user",
+                      content: question,
+                    });
+                  }}
+                >
+                  <ArrowRight className="size-4" />
+                  {question}
+                </button>
+              ))}
+            </ChatBubble>
           )}
         </div>
         {messages.length === 0 && !isLoading && (
@@ -336,30 +417,10 @@ export function Chat() {
       </div>
       <ChatInput
         value={input}
-        onChange={handleInputChange}
+        setValue={setInput}
         onSubmit={handleSubmit}
         append={append}
         isLoading={isLoading}
-        followUpQuestions={
-          messages.length > 0 &&
-          messages[messages.length - 1].role === "assistant" &&
-          messages[messages.length - 1].annotations &&
-          (messages[messages.length - 1].annotations as MessageAnnotation[])
-            .length > 0 &&
-          (messages[messages.length - 1].annotations as MessageAnnotation[])[
-            (messages[messages.length - 1].annotations as MessageAnnotation[])
-              .length - 1
-          ]
-            ? (
-                messages[messages.length - 1].annotations as MessageAnnotation[]
-              )[
-                (
-                  messages[messages.length - 1]
-                    .annotations as MessageAnnotation[]
-                ).length - 1
-              ].followupQuestions
-            : []
-        }
         data-testid="chat-input"
       />
     </main>

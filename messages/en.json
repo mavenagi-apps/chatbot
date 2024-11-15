@@ -49,7 +49,7 @@
       "copied_to_clipboard": "Copied to clipboard",
       "copy_to_clipboard": "Copy to clipboard",
       "speak_to_agent": "Speak to agent",
-      "feedback_reason": "Why did you select this feedback?",
+      "feedback_reason": "Provide additional feedback",
       "down_placeholder": "Let us know how the response can be improved.",
       "up_placeholder": "What did you like about the response?",
       "submit": "Submit"
@@ -62,8 +62,7 @@
     "SearchPage": {
       "title": "How can we help?",
       "description": "You can ask any question or start with a popular question",
-      "powered_by": "Powered by",
-      "related_links": "Related links"
+      "powered_by": "Powered by"
     },
     "TableFilter": {
       "filter": "Filter",

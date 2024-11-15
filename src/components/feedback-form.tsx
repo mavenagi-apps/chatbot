@@ -101,17 +101,13 @@ export default function FeedbackForm({
     }
   };
 
-  const buttonsContainerRef = React.useRef<HTMLDivElement>(null);
   const thumbsUpRef = React.useRef<HTMLButtonElement>(null);
   const thumbsDownRef = React.useRef<HTMLButtonElement>(null);
 
   return (
-    <div>
-      <div className="flex justify-end">
-        <div
-          className="relative flex flex-wrap justify-end gap-x-4 gap-y-2 text-gray-500"
-          ref={buttonsContainerRef}
-        >
+    <div className="px-3 py-1 border-t-[#DADEE3] border-t">
+      <div className="flex">
+        <div className="relative flex items-center">
           <ButtonGroup className="relative">
             <button
               type="button"
@@ -152,41 +148,14 @@ export default function FeedbackForm({
       </div>
 
       {feedbackTextFormShown && (
-        <div className="relative mt-4 rounded-lg border border-gray-200 text-xs shadow-sm">
-          <div
-            className="absolute"
-            style={{
-              right:
-                buttonsContainerRef.current !== null &&
-                thumbsUpRef.current !== null &&
-                thumbsDownRef.current !== null
-                  ? buttonsContainerRef.current.offsetWidth +
-                    4 -
-                    (feedbackType === FeedbackType.ThumbsUp
-                      ? thumbsUpRef.current.offsetLeft +
-                        thumbsUpRef.current.offsetWidth / 2
-                      : thumbsDownRef.current.offsetLeft +
-                        thumbsDownRef.current.offsetWidth / 2)
-                  : "-9999px",
-              top: "-6px",
-            }}
-          >
-            <div
-              className="absolute border-b border-r border-gray-200 bg-white"
-              style={{
-                transform: "rotate(-135deg)",
-                height: "11px",
-                width: "11px",
-              }}
-            />
-          </div>
+        <div className="relative mb-2 mt-1 rounded-lg border bg-white border-gray-200 text-xs shadow-sm">
           {feedbackTextFormShown && (
             <>
-              <div className="rounded-t-lg border-b border-gray-200 px-3 py-2">
+              <div className="rounded-t-lg border-b border-gray-200 px-3 py-3">
                 <h3 className="font-semibold">{t("feedback_reason")}</h3>
               </div>
-              <div className="px-3 py-2">
-                <form onSubmit={onSubmit} className="grid gap-y-2">
+              <div className="px-3 py-3">
+                <form onSubmit={onSubmit} className="grid gap-y-3">
                   <Textarea
                     className="text-xs"
                     placeholder={
@@ -200,6 +169,7 @@ export default function FeedbackForm({
                   <div>
                     <Button
                       variant="secondary"
+                      size="sm"
                       disabled={feedbackTextMutation.isPending}
                       type="submit"
                       className="float-right"

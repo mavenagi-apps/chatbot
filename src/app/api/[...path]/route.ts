@@ -19,6 +19,7 @@ const handleRequest = async (
       `${process.env.MAVENAGI_APP_ID}:${process.env.MAVENAGI_APP_SECRET}`,
     ).toString("base64")}`,
   );
+  headers.set("Accept-Encoding", "identity");
   const path = (await params).path.map(encodeURIComponent).join("/");
 
   const response = await fetch(
@@ -32,7 +33,7 @@ const handleRequest = async (
     }),
   );
   const responseHeaders = new Headers();
-  for (const key of ["content-type", "content-encoding"]) {
+  for (const key of ["content-type"]) {
     if (response.headers.get(key)) {
       responseHeaders.set(key, response.headers.get(key)!);
     }
