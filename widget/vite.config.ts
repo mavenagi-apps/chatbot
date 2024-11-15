@@ -14,16 +14,31 @@ export default defineConfig({
         );
         console.assert(entryChunk, "No entry point found");
         fs.writeFileSync(
-          path.resolve(__dirname, "..", "vercel.json"),
-          JSON.stringify({
-            redirects: [
-              {
-                source: "/widget.js",
-                destination: `/${entryChunk?.fileName}`,
-                permanent: false,
-              },
-            ],
-          }),
+          path.resolve(__dirname, "..", "next.config.ts"),
+          `import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin();
+
+const nextConfig: NextConfig = {
+  images: {
+    dangerouslyAllowSVG: true,
+    contentDispositionType: "attachment",
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+  },
+  async redirects() {
+    return [
+      {
+        source: "/widget.js",
+        destination: "/${entryChunk?.fileName}",
+        permanent: false,
+      },
+    ];
+  }
+};
+
+export default withNextIntl(nextConfig);
+`,
         );
       },
     },

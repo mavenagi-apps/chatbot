@@ -39,6 +39,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-vercel.json
 .turbo
 /public/*.js
+next.config.ts

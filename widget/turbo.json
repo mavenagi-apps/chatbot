@@ -3,7 +3,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["../public/widget*", "../vercel.json"]
+      "outputs": ["../public/widget*", "../next.config.ts"]
     }
   }
 }

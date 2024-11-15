@@ -18,7 +18,7 @@ Note: As of 11/14 the widget.js change is not in prod. So this app can be previe
 1. Include the below javascript to install the chat widget on your website.
 
 ```
-<script src="https://www.mavenwidgets.net/widget.js" async></script>
+<script src="https://chatbot.onmaven.app/widget.js" async></script>
 ```
 
 3. Initialize the widget and provide configuration settings:
