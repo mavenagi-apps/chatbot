@@ -75,7 +75,7 @@ export async function POST(req: Request) {
     for (const response of responseMessage.responses) {
       if (response.type === "text") {
         text += response.text;
-      } else {
+      } else if (response.type === "actionForm") {
         actions.push({
           fields: response.fields,
           formLabel: response.formLabel,
