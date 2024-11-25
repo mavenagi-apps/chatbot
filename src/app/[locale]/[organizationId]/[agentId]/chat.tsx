@@ -5,13 +5,15 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useChat } from "ai/react";
 import Color from "colorjs.io";
 import { ArrowRight } from "lucide-react";
+import { BotChartResponse } from "mavenagi/api/resources/conversation/types/BotChartResponse";
+import { ChartSpecSchema } from "mavenagi/api/resources/conversation/types/ChartSpecSchema";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useParams, useSearchParams } from "next/navigation";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { BotMessage } from "@/components/bot-message";
+import { BotMessage, RenderCharts } from "@/components/bot-message";
 import { ChatBubble } from "@/components/chat-bubble";
 import { ChatInput } from "@/components/chat-input";
 import FeedbackForm from "@/components/feedback-form";
@@ -39,6 +41,11 @@ type MessageAnnotation = {
   sources: {
     title: string;
     url: string;
+  }[];
+  charts?: {
+    label: string;
+    specSchema: ChartSpecSchema;
+    spec: string;
   }[];
   actions?: {
     fields: {
@@ -222,6 +229,28 @@ export function Chat() {
                   <div className="max-w-full">
                     <BotMessage message={value.content} />
                   </div>
+
+                  {value.annotations?.map((annotation, index) => {
+                    if (
+                      (annotation as MessageAnnotation).charts &&
+                      (
+                        (annotation as MessageAnnotation)
+                          .charts as BotChartResponse[]
+                      ).length > 0
+                    ) {
+                      console.log("rendering charts");
+                      return (
+                        <RenderCharts
+                          key={index}
+                          charts={
+                            (annotation as MessageAnnotation)
+                              .charts as BotChartResponse[]
+                          }
+                        />
+                      );
+                    }
+                    return null;
+                  })}
 
                   {value.annotations &&
                     value.annotations.length > 0 &&
