@@ -46,11 +46,16 @@ export async function POST(req: Request) {
       }),
   });
 
-  if (tag && messages.length === 1) {
+  if (messages.length === 1) {
     await client.conversation.initialize({
       conversationId: { referenceId: conversationId },
       messages: [],
       tags: tag ? new Set([tag]) : undefined,
+      responseConfig: {
+        capabilities: ["MARKDOWN", "FORMS", "IMAGES", "CHARTS_HIGHCHARTS_TS"],
+        isCopilot: false,
+        responseLength: "MEDIUM",
+      },
     });
   }
   const message = messages[messages.length - 1];
@@ -75,7 +80,7 @@ export async function POST(req: Request) {
     for (const response of responseMessage.responses) {
       if (response.type === "text") {
         text += response.text;
-      } else {
+      } else if (response.type === "actionForm") {
         actions.push({
           fields: response.fields,
           formLabel: response.formLabel,
@@ -112,6 +117,7 @@ export async function POST(req: Request) {
     async start(controller) {
       let conversationMessageId = undefined;
       let metadata = undefined;
+      const charts = [];
       const actions = [];
       try {
         for await (const chunk of response) {
@@ -127,6 +133,12 @@ export async function POST(req: Request) {
               formLabel: chunk.formLabel,
               id: chunk.id,
               submitLabel: chunk.submitLabel,
+            });
+          } else if (chunk.eventType === "chart") {
+            charts.push({
+              label: chunk.label,
+              specSchema: chunk.specSchema,
+              spec: chunk.spec,
             });
           } else if (chunk.eventType === "metadata") {
             const newMetadata = JSON.stringify({
@@ -148,9 +160,10 @@ export async function POST(req: Request) {
             }
           }
         }
-        if (actions.length > 0) {
+        if (charts.length > 0 || actions.length > 0) {
           controller.enqueue(
             new TextEncoder().encode(
+              // https://sdk.vercel.ai/docs/ai-sdk-ui/stream-protocol#message-annotation-part
               `8:${JSON.stringify([
                 {
                   conversationMessageId,
@@ -160,6 +173,7 @@ export async function POST(req: Request) {
                         followupQuestions: [],
                         sources: [],
                       }),
+                  charts,
                   actions,
                 },
               ])}`,
