@@ -1,3 +1,6 @@
+export const dynamic = "force-static";
+export const dynamicParams = true;
+
 export default async function Page({
   params,
 }: {

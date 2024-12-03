@@ -32,7 +32,7 @@ export function ReactMarkdown({
             style={{
               listStyleType: "disc",
               listStylePosition: listStylePosition,
-              paddingLeft: "1.25em",
+              paddingLeft: "1.25rem",
             }}
             {...props}
           />
@@ -43,11 +43,14 @@ export function ReactMarkdown({
               style={{
                 listStyleType: "decimal",
                 listStylePosition: listStylePosition,
-                paddingLeft: "1.25em",
+                paddingLeft: "1.25rem",
               }}
               {...props}
             />
           );
+        },
+        li: ({ node: _node, ...props }) => {
+          return <li style={{ paddingLeft: "0.25rem" }} {...props} />;
         },
         pre: ({ node: _node, className, ...props }) => (
           <pre

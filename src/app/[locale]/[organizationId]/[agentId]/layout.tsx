@@ -1,9 +1,7 @@
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
 
-import Spinner from "@/components/spinner";
 import { routing } from "@/i18n/routing";
 
 export function generateStaticParams() {
@@ -34,7 +32,7 @@ export default async function Layout({
 
   return (
     <NextIntlClientProvider messages={messages}>
-      <Suspense fallback={<Spinner />}>{children}</Suspense>
+      {children}
     </NextIntlClientProvider>
   );
 }

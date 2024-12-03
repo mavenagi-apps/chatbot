@@ -1,9 +1,7 @@
 "use client";
 
 import { createId } from "@paralleldrive/cuid2";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { useChat } from "ai/react";
-import Color from "colorjs.io";
 import { ArrowRight } from "lucide-react";
 import { BotChartResponse } from "mavenagi/api/resources/conversation/types/BotChartResponse";
 import { ChartSpecSchema } from "mavenagi/api/resources/conversation/types/ChartSpecSchema";
@@ -31,7 +29,6 @@ import {
 } from "@/components/ui/form";
 import { UserMessage } from "@/components/user-message";
 import { useAmplitude } from "@/lib/amplitude-provider";
-import { useMavenAGIClient } from "@/lib/client";
 
 import logoLight from "./mavenagi_logo_light.svg";
 
@@ -61,24 +58,17 @@ type MessageAnnotation = {
   }[];
 };
 
-export function Chat() {
+export function Chat({ appSettings }: { appSettings: AppSettings }) {
   const { organizationId, agentId } = useParams<{
     organizationId: string;
     agentId: string;
   }>();
   const t = useTranslations("chat.ChatPage");
-  const client = useMavenAGIClient();
 
   const amplitude = useAmplitude();
   useEffect(() => {
     amplitude.logEvent("chat-home-view", { organizationId, agentId });
   }, [amplitude, organizationId, agentId]);
-
-  const appSettings = useSuspenseQuery({
-    queryKey: ["appSettings"],
-    queryFn: async () =>
-      client.appSettings.get() as unknown as Promise<AppSettings>,
-  }).data;
 
   const tag = useSearchParams().get("tag");
   const [userId] = useState(createId());
@@ -125,20 +115,6 @@ export function Chat() {
     messages.length > 0 && messages[messages.length - 1].role === "assistant";
 
   const latestQuestionRef = useRef<HTMLDivElement>(null);
-  if (!appSettings.brandColor) {
-    appSettings.brandColor = "#6C2BD9";
-  }
-  if (!appSettings.brandFontColor) {
-    appSettings.brandFontColor = "#6C2BD9";
-  }
-  if (!appSettings.brandTitleColor) {
-    appSettings.brandTitleColor = "#ffffff";
-  }
-
-  const brandColor = appSettings.brandColor
-    ? new Color(appSettings.brandColor)
-    : undefined;
-
   const followUpQuestions =
     messages.length > 0 &&
     messages[messages.length - 1].role === "assistant" &&
@@ -156,19 +132,7 @@ export function Chat() {
       : [];
 
   return (
-    <main
-      className="flex h-screen flex-col"
-      style={{
-        // @ts-expect-error error
-        "--brand-color": appSettings.brandColor,
-        "--brand-font-color":
-          appSettings.brandFontColor || appSettings.brandColor,
-        "--brand-title-color": appSettings.brandTitleColor,
-        ...(brandColor && {
-          "--primary": `${brandColor.hsl[0]} ${brandColor.hsl[1]}% ${brandColor.hsl[2]}%`,
-        }),
-      }}
-    >
+    <>
       <div className="border-b border-gray-300 bg-white">
         <div className="text-md py-4 px-6 font-medium text-gray-950">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -439,6 +403,6 @@ export function Chat() {
         data-testid="chat-input"
         followUpQuestions={!isLoading ? followUpQuestions : []}
       />
-    </main>
+    </>
   );
 }
