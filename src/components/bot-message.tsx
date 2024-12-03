@@ -33,10 +33,8 @@ export function RenderCharts({ charts }: { charts: BotChartResponse[] }) {
 export function BotMessage({ message }: BotMessageProps) {
   return (
     <>
-      <div className="prose max-w-full overflow-auto p-5">
-        <ReactMarkdown bulletsInside={true} linkTargetInNewTab={true}>
-          {message}
-        </ReactMarkdown>
+      <div className="prose flex flex-col gap-4 max-w-full overflow-auto p-3">
+        <ReactMarkdown linkTargetInNewTab={true}>{message}</ReactMarkdown>
       </div>
     </>
   );

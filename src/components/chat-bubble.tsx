@@ -15,7 +15,7 @@ export const ChatBubble = forwardRef<HTMLDivElement, ChatBubbleProps>(
       <div
         ref={ref}
         className={cn(
-          "grid w-full gap-y-5 text-sm rounded-lg",
+          "border border-gray-200 grid w-full gap-y-5 text-xs/[18px] rounded-lg",
           direction === "right" && "ml-8 w-fit place-self-end",
           direction === "left" && "mr-8",
           className,

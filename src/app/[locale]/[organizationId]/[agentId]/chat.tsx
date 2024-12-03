@@ -176,39 +176,40 @@ export function Chat() {
         </div>
       </div>
       <div
-        className="flex flex-1 flex-col overflow-y-auto p-2"
+        className="bg-[#f8f8f8] flex flex-1 flex-col overflow-y-auto p-2"
         style={{ scrollbarGutter: "stable both-edges", scrollbarWidth: "thin" }}
       >
         <div className="mx-auto w-full max-w-3xl flex-1 text-gray-800 mt-5 px-2 *:mt-4">
           <ChatBubble
             direction="full"
-            className="bg-[#f2f4f5] p-5"
+            className="bg-white p-4"
             style={{ marginTop: 0 }}
           >
-            <div className="flex flex-col gap-3">
-              <div className="mb-2 whitespace-pre-wrap">
+            <div className="flex flex-col gap-4">
+              <div className="whitespace-pre-wrap">
                 <ReactMarkdown linkTargetInNewTab>
                   {appSettings.welcomeMessage || t("default_welcome_message")}
                 </ReactMarkdown>
               </div>
-              {appSettings.popularQuestions
-                .slice(0, 3)
-                .map((question, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    className="flex flex-row px-3 py-1 gap-2 items-center rounded-lg border border-[#DADEE3] bg-white/50 text-left text-xs text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200"
-                    onClick={() => {
-                      void append({
-                        role: "user",
-                        content: question,
-                      });
-                    }}
-                  >
-                    <ArrowRight className="size-4" />
-                    {question}
-                  </button>
-                ))}
+              <div className="flex flex-col gap-2 items-start">
+                {appSettings.popularQuestions
+                  .slice(0, 3)
+                  .map((question, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      className="underline flex flex-row text-gray-900 text-start"
+                      onClick={() => {
+                        void append({
+                          role: "user",
+                          content: question,
+                        });
+                      }}
+                    >
+                      {question}
+                    </button>
+                  ))}
+              </div>
             </div>
           </ChatBubble>
 
@@ -225,7 +226,7 @@ export function Chat() {
               </ChatBubble>
             ) : (
               <Fragment key={index}>
-                <ChatBubble direction="left" className="bg-[#f2f4f5] gap-0">
+                <ChatBubble direction="left" className="bg-white gap-0">
                   <div className="max-w-full">
                     <BotMessage message={value.content} />
                   </div>
@@ -259,35 +260,38 @@ export function Chat() {
                         value.annotations.length - 1
                       ] as MessageAnnotation
                     ).sources.length > 0 && (
-                      <ul className="grid grid-cols-2 pb-5 px-5 gap-x-3 gap-y-2 text-xs">
-                        {(
-                          value.annotations[
-                            value.annotations.length - 1
-                          ] as MessageAnnotation
-                        ).sources
-                          .slice(0, 4)
-                          .map((source, index) => (
-                            <li
-                              key={index}
-                              className="inline-flex border rounded border-[#DADEE3] overflow-hidden"
-                            >
-                              <div className="px-2 py-1 bg-[#E8EAED]">
-                                {index + 1}
-                              </div>
-                              <div className="flex-1 bg-white truncate px-2 py-1">
-                                <a
-                                  key={index}
-                                  title={source.title || source.url}
-                                  href={source.url}
-                                  target="_blank"
-                                  className="text-zinc-950 decoration-zinc-950/50 data-[hover]:decoration-zinc-950 dark:text-white dark:decoration-white/50 dark:data-[hover]:decoration-white"
-                                >
-                                  {source.title || source.url}
-                                </a>
-                              </div>
-                            </li>
-                          ))}
-                      </ul>
+                      <div className="flex flex-col gap-2 p-3">
+                        <div className="text-gray-500">
+                          {t("related_links")}
+                        </div>
+                        <ul className="gap-2 flex flex-col">
+                          {(
+                            value.annotations[
+                              value.annotations.length - 1
+                            ] as MessageAnnotation
+                          ).sources
+                            .slice(0, 4)
+                            .map((source, index) => (
+                              <li
+                                key={index}
+                                className="flex items-center gap-3"
+                              >
+                                <ArrowRight className="size-3.5" />
+                                <div className="flex-1">
+                                  <a
+                                    key={index}
+                                    title={source.title || source.url}
+                                    href={source.url}
+                                    target="_blank"
+                                    className="text-zinc-950 underline decoration-zinc-950/50 data-[hover]:decoration-zinc-950"
+                                  >
+                                    {source.title || source.url}
+                                  </a>
+                                </div>
+                              </li>
+                            ))}
+                        </ul>
+                      </div>
                     )}
 
                   {value.annotations && value.annotations.length > 0 && (
@@ -401,31 +405,6 @@ export function Chat() {
               <Spinner className="text-[--brand-color]" />
             </div>
           )}
-
-          {!isLoading && followUpQuestions.length > 0 && (
-            <ChatBubble
-              direction="left"
-              className="flex flex-col bg-[#f2f4f5] items-start p-5 gap-3"
-            >
-              <div className="text-[#637083]">Select a suggested followup</div>
-              {followUpQuestions.map((question, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  className="flex flex-row px-3 py-1 gap-2 items-center rounded-lg border border-[#DADEE3] bg-white/50 text-left text-xs text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200"
-                  onClick={() => {
-                    void append({
-                      role: "user",
-                      content: question,
-                    });
-                  }}
-                >
-                  <ArrowRight className="size-4" />
-                  {question}
-                </button>
-              ))}
-            </ChatBubble>
-          )}
         </div>
         {messages.length === 0 && !isLoading && (
           <div className="flex h-20 w-full items-center text-center">
@@ -447,10 +426,18 @@ export function Chat() {
       <ChatInput
         value={input}
         setValue={setInput}
-        onSubmit={handleSubmit}
+        onSubmit={(question) =>
+          question
+            ? void append({
+                role: "user",
+                content: question,
+              })
+            : handleSubmit()
+        }
         append={append}
         isLoading={isLoading}
         data-testid="chat-input"
+        followUpQuestions={!isLoading ? followUpQuestions : []}
       />
     </main>
   );

@@ -5,11 +5,11 @@ It is being replaced by Chat v2 which has additional features and security.
 
 # Installation
 
-* Install the `chat` app via Agent Designer  
-  * Navigate to the Agent Designer [dashboard](https://app.mavenagi.com/dashboard)  
-  * Select `Apps` \> `App Directory` \> `Browse & Install`  
-  * Install the official `Chat` app (created by Maven AGI)  
-  * Provide the required settings, including the logo URL and brand color hex code  
+- Install the `chat` app via Agent Designer
+  - Navigate to the Agent Designer [dashboard](https://app.mavenagi.com/dashboard)
+  - Select `Apps` \> `App Directory` \> `Browse & Install`
+  - Install the official `Chat` app (created by Maven AGI)
+  - Provide the required settings, including the logo URL and brand color hex code
 
 # Deploying the App Via JS Widget
 
@@ -23,14 +23,14 @@ It is being replaced by Chat v2 which has additional features and security.
 
 ```javascript
 <script>
-addEventListener("load", function () {
-  Maven.ChatWidget.load({
+  addEventListener("load", function (){" "}
+  {Maven.ChatWidget.load({
     organizationId: "<orgId>",
     agentId: "<agentId>",
     location: "bottom-left",
-    tag: "help-center"
-  })
-});
+    tag: "help-center",
+  })}
+  );
 </script>
 ```
 
@@ -41,12 +41,12 @@ And your agentId can be found on the Agents page.
 
 ```typescript
 interface WidgetConfig {
-  bgColor?: string;                              // Widget background color
-  textColor?: string;                            // Widget text color (default: 'white')
-  location?: 'bottom-left' | 'bottom-right';     // Widget position (default: 'bottom-right')
-  tag?: string;                                  // A tag to be used on all conversations
-  organizationId: string;                        // Required: Your organization ID
-  agentId: string;                               // Required: Your agent ID
+  bgColor?: string; // Widget background color
+  textColor?: string; // Widget text color (default: 'white')
+  location?: "bottom-left" | "bottom-right"; // Widget position (default: 'bottom-right')
+  tag?: string; // A tag to be used on all conversations
+  organizationId: string; // Required: Your organization ID
+  agentId: string; // Required: Your agent ID
 }
 ```
 

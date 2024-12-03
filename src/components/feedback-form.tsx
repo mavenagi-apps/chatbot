@@ -9,7 +9,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { ButtonGroup } from "@/components/button-group";
 import { Textarea } from "@/components/ui/textarea";
 import { useMavenAGIClient } from "@/lib/client";
 
@@ -105,45 +104,42 @@ export default function FeedbackForm({
   const thumbsDownRef = React.useRef<HTMLButtonElement>(null);
 
   return (
-    <div className="px-3 py-1 border-t-[#DADEE3] border-t">
-      <div className="flex">
-        <div className="relative flex items-center">
-          <ButtonGroup className="relative">
+    <div className="p-3 flex flex-col">
+      <div className="flex self-end">
+        <div className="rounded-lg border border-[#e5e7eb] relative flex items-center *:px-3 *:py-2 divide-x *:text-[--brand-color] hover:*:bg-gray-200 outline-none overflow-hidden">
+          <button
+            type="button"
+            ref={thumbsUpRef}
+            {...(feedbackTextFormShown && feedbackType === FeedbackType.ThumbsUp
+              ? { "data-active": "" }
+              : {})}
+            onClick={() => thumbsOnClick(FeedbackType.ThumbsUp)}
+          >
+            <ThumbsUp className="size-3" xlinkTitle={t("thumbs_up")} />
+          </button>
+          <button
+            type="button"
+            ref={thumbsDownRef}
+            {...(feedbackTextFormShown &&
+            feedbackType === FeedbackType.ThumbsDown
+              ? { "data-active": "" }
+              : {})}
+            onClick={() => thumbsOnClick(FeedbackType.ThumbsDown)}
+          >
+            <ThumbsDown className="size-3" xlinkTitle={t("thumbs_down")} />
+          </button>
+          {
             <button
               type="button"
-              ref={thumbsUpRef}
-              {...(feedbackTextFormShown &&
-              feedbackType === FeedbackType.ThumbsUp
-                ? { "data-active": "" }
-                : {})}
-              onClick={() => thumbsOnClick(FeedbackType.ThumbsUp)}
+              onClick={() => {
+                toast.promise(navigator.clipboard.writeText(message), {
+                  success: t("copied_to_clipboard"),
+                });
+              }}
             >
-              <ThumbsUp className="size-4" xlinkTitle={t("thumbs_up")} />
+              <Copy className="size-3" xlinkTitle={t("copy_to_clipboard")} />
             </button>
-            <button
-              type="button"
-              ref={thumbsDownRef}
-              {...(feedbackTextFormShown &&
-              feedbackType === FeedbackType.ThumbsDown
-                ? { "data-active": "" }
-                : {})}
-              onClick={() => thumbsOnClick(FeedbackType.ThumbsDown)}
-            >
-              <ThumbsDown className="size-4" xlinkTitle={t("thumbs_down")} />
-            </button>
-            {
-              <button
-                type="button"
-                onClick={() => {
-                  toast.promise(navigator.clipboard.writeText(message), {
-                    success: t("copied_to_clipboard"),
-                  });
-                }}
-              >
-                <Copy className="size-4" xlinkTitle={t("copy_to_clipboard")} />
-              </button>
-            }
-          </ButtonGroup>
+          }
         </div>
       </div>
 
