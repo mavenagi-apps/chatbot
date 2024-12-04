@@ -152,7 +152,10 @@ export function Chat({ appSettings }: { appSettings: AppSettings }) {
             <div className="flex flex-col gap-4">
               <div className="whitespace-pre-wrap">
                 <ReactMarkdown linkTargetInNewTab>
-                  {appSettings.welcomeMessage || t("default_welcome_message")}
+                  {appSettings.welcomeMessage &&
+                  appSettings.welcomeMessage !== "NULL"
+                    ? appSettings.welcomeMessage
+                    : t("default_welcome_message")}
                 </ReactMarkdown>
               </div>
               <div className="flex flex-col gap-2 items-start">
