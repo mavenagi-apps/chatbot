@@ -106,7 +106,7 @@ export default function FeedbackForm({
   return (
     <div className="p-3 flex flex-col">
       <div className="flex self-end">
-        <div className="rounded-lg border border-[#e5e7eb] relative flex items-center *:px-3 *:py-2 divide-x *:text-[--brand-title-color] hover:*:bg-gray-200 outline-none overflow-hidden">
+        <div className="rounded-lg border border-[#e5e7eb] relative flex items-center *:px-3 *:py-2 divide-x hover:*:bg-gray-200 outline-none overflow-hidden">
           <button
             type="button"
             ref={thumbsUpRef}
