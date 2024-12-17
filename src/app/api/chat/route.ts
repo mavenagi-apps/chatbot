@@ -5,7 +5,6 @@ import { z } from "zod";
 import { getBaseUrl } from "@/lib/client.server";
 
 export const maxDuration = 900;
-export const runtime = "edge";
 
 export async function POST(req: Request) {
   const { messages, conversationId, userId, organizationId, agentId, tag } = z
