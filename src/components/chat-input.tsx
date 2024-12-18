@@ -89,7 +89,13 @@ export const ChatInput = ({
           )}
         </div>
       )}
-      <form onSubmit={() => onSubmit()} className="flex items-center">
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          onSubmit();
+        }}
+        className="flex items-center"
+      >
         <input
           suppressContentEditableWarning
           contentEditable="plaintext-only"
