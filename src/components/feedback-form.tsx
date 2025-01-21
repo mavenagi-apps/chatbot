@@ -40,6 +40,7 @@ export default function FeedbackForm({
     type: typeof FeedbackType.ThumbsUp | typeof FeedbackType.ThumbsDown;
     text?: string;
   }) => {
+    console.log("feedback", feedback);
     setFeedbackType(feedback.type);
     await client.conversation.createFeedback({
       conversationId: { referenceId: conversationId },
@@ -143,7 +144,9 @@ export default function FeedbackForm({
         </div>
       </div>
 
-      {feedbackTextFormShown && (
+      {
+        // TODO(shalabi): Renable when feedback updates are possible
+        false && feedbackTextFormShown && (
         <div className="relative mb-2 mt-1 rounded-lg border bg-white border-gray-200 text-xs shadow-sm">
           {feedbackTextFormShown && (
             <>
