@@ -3,8 +3,7 @@
 import { createId } from "@paralleldrive/cuid2";
 import { useChat } from "ai/react";
 import { ArrowRight } from "lucide-react";
-import { BotChartResponse } from "mavenagi/api/resources/conversation/types/BotChartResponse";
-import { ChartSpecSchema } from "mavenagi/api/resources/conversation/types/ChartSpecSchema";
+import { BotChartResponse, ChartSpecSchema } from "mavenagi/api";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useParams, useSearchParams } from "next/navigation";
@@ -31,6 +30,7 @@ import { UserMessage } from "@/components/user-message";
 import { useAmplitude } from "@/lib/amplitude-provider";
 
 import logoLight from "./mavenagi_logo_light.svg";
+import { getOrCreateUserId } from "@/lib/utils";
 
 type MessageAnnotation = {
   conversationMessageId: string;
@@ -71,7 +71,7 @@ export function Chat({ appSettings }: { appSettings: AppSettings }) {
   }, [amplitude, organizationId, agentId]);
 
   const tag = useSearchParams().get("tag");
-  const [userId] = useState(createId());
+  const [userId] = useState(getOrCreateUserId());
   const [conversationId] = useState(createId());
   const {
     messages,
@@ -272,6 +272,7 @@ export function Chat({ appSettings }: { appSettings: AppSettings }) {
                             ] as MessageAnnotation
                           ).conversationMessageId
                         }
+                        userId={userId}
                         message={value.content}
                       />
                     </div>

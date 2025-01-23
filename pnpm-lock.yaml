@@ -65,12 +65,15 @@ importers:
       highlight.js:
         specifier: ^11.10.0
         version: 11.10.0
+      js-cookie:
+        specifier: ^3.0.5
+        version: 3.0.5
       lucide-react:
         specifier: ^0.456.0
         version: 0.456.0(react@19.0.0-rc-66855b96-20241106)
       mavenagi:
-        specifier: 1.0.1
-        version: 1.0.1
+        specifier: 1.0.5
+        version: 1.0.5
       next:
         specifier: 15.0.3
         version: 15.0.3(@opentelemetry/api@1.9.0)(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
@@ -126,6 +129,9 @@ importers:
       '@tanstack/react-query-devtools':
         specifier: ^5.62.2
         version: 5.62.2(@tanstack/react-query@5.62.2(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
+      '@types/js-cookie':
+        specifier: ^3.0.6
+        version: 3.0.6
       '@types/node':
         specifier: ^20.17.9
         version: 20.17.9
@@ -1058,6 +1064,9 @@ packages:
 
   '@types/hast@3.0.4':
     resolution: {integrity: sha512-WPs+bbQw5aCj+x6laNGWLH3wviHtoCv/P3+otBhbOhJgG8qtpdAMlTCxLtsTWA7LH1Oh/bFCHsBn0TPS5m30EQ==}
+
+  '@types/js-cookie@3.0.6':
+    resolution: {integrity: sha512-wkw9yd1kEXOPnvEeEV1Go1MmxtBJL0RR79aOTAApecWFVu7w0NNXNqhcWgvw2YgZDYadliXkl14pa3WXw5jlCQ==}
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
@@ -2204,6 +2213,10 @@ packages:
   js-base64@3.7.7:
     resolution: {integrity: sha512-7rCnleh0z2CkXhH67J8K1Ytz0b2Y+yxTPL+/KOJoa20hfnVQ/3/T6W/KflYI4bRHRagNeXeU2bkNGI3v1oS/lw==}
 
+  js-cookie@3.0.5:
+    resolution: {integrity: sha512-cEiJEAEoIbWfCZYKWhVwFuvPX1gETRYPw6LlaTKoxD3s2AkXzkCjnp6h0V77ozyqj0jakteJ4YqDJT830+lVGw==}
+    engines: {node: '>=14'}
+
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
@@ -2315,8 +2328,8 @@ packages:
   markdown-table@3.0.4:
     resolution: {integrity: sha512-wiYz4+JrLyb/DqW2hkFJxP7Vd7JuTDm77fvbM8VfEQdmSMqcImWeeRbHwZjBjIFki/VaMK2BhFi7oUUZeM5bqw==}
 
-  mavenagi@1.0.1:
-    resolution: {integrity: sha512-seQJdTct107PDet6Wge9/E9E/9at0BB6qrwMGl1oVu07R4ZzhA+vSPkFC7LPV9P+oRuKoIp5gJr0zdFpaxEp3w==}
+  mavenagi@1.0.5:
+    resolution: {integrity: sha512-ZjjSbB425SaLsX/qg37LDcp7277+ApdzbZVULX7RtanZpWQnWqKXuloRgyv1S+lTqJfk0giAait5dhextWcctA==}
 
   mdast-util-find-and-replace@3.0.1:
     resolution: {integrity: sha512-SG21kZHGC3XRTSUhtofZkBzZTJNM5ecCi0SK2IMKmSXR8vO3peL+kb1O0z7Zl83jKtutG4k5Wv/W7V3/YHvzPA==}
@@ -4130,6 +4143,8 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
 
+  '@types/js-cookie@3.0.6': {}
+
   '@types/json-schema@7.0.15': {}
 
   '@types/json5@0.0.29': {}
@@ -5458,6 +5473,8 @@ snapshots:
 
   js-base64@3.7.7: {}
 
+  js-cookie@3.0.5: {}
+
   js-tokens@4.0.0: {}
 
   js-yaml@4.1.0:
@@ -5556,7 +5573,7 @@ snapshots:
 
   markdown-table@3.0.4: {}
 
-  mavenagi@1.0.1:
+  mavenagi@1.0.5:
     dependencies:
       form-data: 4.0.1
       formdata-node: 6.0.3

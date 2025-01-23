@@ -11,7 +11,6 @@ import { z } from "zod";
 
 import { Textarea } from "@/components/ui/textarea";
 import { useMavenAGIClient } from "@/lib/client";
-
 import Spinner from "./spinner";
 import { Button } from "./ui/button";
 
@@ -19,12 +18,14 @@ type Props = {
   message: string;
   conversationId: string;
   conversationMessageId: string;
+  userId: string;
 };
 
 export default function FeedbackForm({
   message,
   conversationId,
   conversationMessageId,
+  userId,
 }: Props) {
   const client = useMavenAGIClient();
   const t = useTranslations("chat.FeedbackForm");
@@ -40,28 +41,21 @@ export default function FeedbackForm({
     type: typeof FeedbackType.ThumbsUp | typeof FeedbackType.ThumbsDown;
     text?: string;
   }) => {
-    console.log("feedback", feedback);
+    console.log("userID", userId);
+    console.log("conversationId", conversationId);
+    console.log("conversationMessageId", conversationMessageId);
+    console.log("feedbackId", feedbackId);
     setFeedbackType(feedback.type);
     await client.conversation.createFeedback({
       conversationId: { referenceId: conversationId },
       conversationMessageId: { referenceId: conversationMessageId },
       feedbackId: { referenceId: feedbackId },
+      userId: { referenceId: userId },
       type: feedback.type,
       text: feedback.text,
     });
   };
-
-  const thumbsMutation = useMutation({
-    mutationFn,
-    onSuccess: () => {
-      reset();
-      setFeedbackTextFormShown(true);
-    },
-    onError: () => {
-      setFeedbackType(undefined);
-      setFeedbackTextFormShown(false);
-    },
-  });
+  
   const feedbackTextMutation = useMutation({
     mutationFn,
     onSuccess: () => {
@@ -72,10 +66,12 @@ export default function FeedbackForm({
   const schema = z.object({
     text: z.string().min(1),
   });
-  const { reset, register, handleSubmit } = useForm<z.infer<typeof schema>>({
+  const { register, handleSubmit } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
   });
   const onSubmit = handleSubmit(async (data) => {
+    console.log("onSubmit", data);
+    console.log("feedbackType", feedbackType);
     toast.promise(
       feedbackTextMutation.mutateAsync({
         type: feedbackType!,
@@ -91,62 +87,58 @@ export default function FeedbackForm({
 
   const thumbsOnClick = async (
     type: typeof FeedbackType.ThumbsUp | typeof FeedbackType.ThumbsDown,
-  ) => {
-    if (feedbackType !== type) {
-      setFeedbackTextFormShown(false);
-      toast.promise(thumbsMutation.mutateAsync({ type }), {
-        loading: "Submitting feedback...",
-        error: "Error submitting feedback.",
-      });
-    }
+  ) => {    
+    setFeedbackType(type);
+    setFeedbackTextFormShown(true);    
   };
 
   const thumbsUpRef = React.useRef<HTMLButtonElement>(null);
   const thumbsDownRef = React.useRef<HTMLButtonElement>(null);
 
   return (
-    <div className="p-3 flex flex-col">
-      <div className="flex self-end">
-        <div className="rounded-lg border border-[#e5e7eb] relative flex items-center *:px-3 *:py-2 divide-x hover:*:bg-gray-200 outline-none overflow-hidden">
-          <button
-            type="button"
-            ref={thumbsUpRef}
-            {...(feedbackTextFormShown && feedbackType === FeedbackType.ThumbsUp
-              ? { className: 'bg-gray-300' }
-              : { className: '' })}
-            onClick={() => thumbsOnClick(FeedbackType.ThumbsUp)}
-          >
-            <ThumbsUp className="size-3" xlinkTitle={t("thumbs_up")} />
-          </button>
-          <button
-            type="button"
-            ref={thumbsDownRef}
-            {...(feedbackTextFormShown &&
-            feedbackType === FeedbackType.ThumbsDown
-              ? { className: 'bg-gray-300' }
-              : { className: '' })}
-            onClick={() => thumbsOnClick(FeedbackType.ThumbsDown)}
-          >
-            <ThumbsDown className="size-3" xlinkTitle={t("thumbs_down")} />
-          </button>
-          {
+    <div className="px-3 pt-1 pb-3">
+      <div className="flex flex-col">
+        <div className="flex self-end">
+          <div className="rounded-lg border border-[#e5e7eb] relative flex items-center *:px-3 *:py-2 divide-x hover:*:bg-gray-200 outline-none overflow-hidden">
             <button
               type="button"
-              onClick={() => {
-                toast.promise(navigator.clipboard.writeText(message), {
-                  success: t("copied_to_clipboard"),
-                });
-              }}
+              ref={thumbsUpRef}
+              {...(feedbackTextFormShown &&
+              feedbackType === FeedbackType.ThumbsUp
+                ? { "data-active": "" }
+                : {})}
+              onClick={() => thumbsOnClick(FeedbackType.ThumbsUp)}
             >
-              <Copy className="size-3" xlinkTitle={t("copy_to_clipboard")} />
+              <ThumbsUp className="size-4" xlinkTitle={t("thumbs_up")} />
             </button>
-          }
+            <button
+              type="button"
+              ref={thumbsDownRef}
+              {...(feedbackTextFormShown &&
+              feedbackType === FeedbackType.ThumbsDown
+                ? { "data-active": "" }
+                : {})}
+              onClick={() => thumbsOnClick(FeedbackType.ThumbsDown)}
+            >
+              <ThumbsDown className="size-4" xlinkTitle={t("thumbs_down")} />
+            </button>
+            {
+              <button
+                type="button"
+                onClick={() => {
+                  toast.promise(navigator.clipboard.writeText(message), {
+                    success: t("copied_to_clipboard"),
+                  });
+                }}
+              >
+                <Copy className="size-4" xlinkTitle={t("copy_to_clipboard")} />
+              </button>
+            }
+          </div>
         </div>
       </div>
 
-      {
-        // TODO(shalabi): Renable when feedback updates are possible
-        false && feedbackTextFormShown && (
+      {feedbackTextFormShown && (
         <div className="relative mb-2 mt-1 rounded-lg border bg-white border-gray-200 text-xs shadow-sm">
           {feedbackTextFormShown && (
             <>

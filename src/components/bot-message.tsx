@@ -1,7 +1,6 @@
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import { BotChartResponse } from "mavenagi/api/resources/conversation/types/BotChartResponse";
-import { ChartSpecSchema } from "mavenagi/api/resources/conversation/types/ChartSpecSchema";
+import { BotChartResponse, ChartSpecSchema } from "mavenagi/api";
 import React from "react";
 
 import { ReactMarkdown } from "./react-markdown";
