@@ -41,10 +41,6 @@ export default function FeedbackForm({
     type: typeof FeedbackType.ThumbsUp | typeof FeedbackType.ThumbsDown;
     text?: string;
   }) => {
-    console.log("userID", userId);
-    console.log("conversationId", conversationId);
-    console.log("conversationMessageId", conversationMessageId);
-    console.log("feedbackId", feedbackId);
     setFeedbackType(feedback.type);
     await client.conversation.createFeedback({
       conversationId: { referenceId: conversationId },
