@@ -101,8 +101,8 @@ export default function FeedbackForm({
               ref={thumbsUpRef}
               {...(feedbackTextFormShown &&
               feedbackType === FeedbackType.ThumbsUp
-                ? { "data-active": "" }
-                : {})}
+                ? { className: 'bg-gray-300' }
+                : { className: '' })}
               onClick={() => thumbsOnClick(FeedbackType.ThumbsUp)}
             >
               <ThumbsUp className="size-4" xlinkTitle={t("thumbs_up")} />
@@ -112,8 +112,8 @@ export default function FeedbackForm({
               ref={thumbsDownRef}
               {...(feedbackTextFormShown &&
               feedbackType === FeedbackType.ThumbsDown
-                ? { "data-active": "" }
-                : {})}
+                ? { className: 'bg-gray-300' }
+                : { className: '' })}
               onClick={() => thumbsOnClick(FeedbackType.ThumbsDown)}
             >
               <ThumbsDown className="size-4" xlinkTitle={t("thumbs_down")} />
