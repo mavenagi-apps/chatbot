@@ -40,15 +40,16 @@ export const ChatInput = ({
   const FollowUpQuestionButton = ({
     className,
     children,
+    index,
     ...props
-  }: HTMLAttributes<HTMLButtonElement>) => (
+  }: HTMLAttributes<HTMLButtonElement> & {index:number;}) => (
     <button
       className={cn(
         className,
         "flex flex-1 items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-left text-xs text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200",
       )}
       {...props}
-      onClick={() => onSubmit(followUpQuestions[0])}
+      onClick={() => onSubmit(followUpQuestions[index])}
     >
       <ArrowRight className="size-4" />
       {children}
@@ -70,7 +71,7 @@ export const ChatInput = ({
             {followUpQuestions
               .slice(0, !seeMoreFollowupQuestions ? 1 : undefined)
               .map((question, index) => (
-                <FollowUpQuestionButton key={index}>
+                <FollowUpQuestionButton key={index} index={index}>
                   {question}
                 </FollowUpQuestionButton>
               ))}
