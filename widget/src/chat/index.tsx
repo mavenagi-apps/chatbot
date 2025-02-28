@@ -149,6 +149,7 @@ const App = forwardRef<
           transformOrigin: transformOrigin,
           opacity: isOpen ? 1 : 0,
           transform: isOpen ? "scale(1)" : "scale(0)",
+          pointerEvents: isOpen ? "auto" : "none",
         }}
         src={props.iframeUrl}
         allow="clipboard-write"
